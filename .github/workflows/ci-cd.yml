@@ -82,7 +82,7 @@ jobs:
       IMAGE_NAME: ${{ github.repository }}
     outputs:
       image_tag: ${{ steps.set_output.outputs.image_tag }}
-    steps:
+   steps:
       - name: Checkout code
         uses: actions/checkout@v4
       
