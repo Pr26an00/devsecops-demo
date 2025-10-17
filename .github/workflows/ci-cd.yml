@@ -81,12 +81,15 @@ jobs:
     needs: [build]
     env:
       REGISTRY: ghcr.io
-      IMAGE_NAME: ${{ toLower(github.repository) }}
     outputs:
-      image_tag: ${{ steps.set_output.outputs.image_tag }}
+    image_tag: ${{ steps.set_output.outputs.image_tag }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Set lowercase image name
+      id: lowercase
+      run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
     - name: Download build artifacts
       uses: actions/download-artifact@v4
@@ -139,6 +142,7 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+
     - name: Set image tag output
       id: set_output
       run: echo "image_tag=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
